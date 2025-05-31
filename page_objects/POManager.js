@@ -1,4 +1,5 @@
 const LoginPage = require('./LoginPage');
+const dashboardPage = require('./DashboardPage');
 
 class POManager {
   constructor(page) {
@@ -6,7 +7,7 @@ class POManager {
     // this.homePage = require('./HomePage');
     // this.profilePage = require('./ProfilePage');
     // this.settingsPage = require('./SettingsPage');
-    // this.dashboardPage = require('./DashboardPage');
+    this.dashboardPage = new dashboardPage(page);
   }
 
   getLoginPage() {
@@ -25,8 +26,8 @@ class POManager {
 //     return this.settingsPage;
 //   }
 
-//   getDashboardPage() {
-//     return this.dashboardPage;
-//   }
+  getDashboardPage() {
+    return this.dashboardPage;
+  }
 } 
 module.exports = POManager;
