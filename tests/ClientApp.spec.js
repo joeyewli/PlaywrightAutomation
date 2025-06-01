@@ -16,7 +16,7 @@ test('Login test', async ({page}) =>
         page.pause();
     
     });
-test.only('Add items to cart', async ({page}) =>
+test('Add items to cart', async ({page}) =>
     {
         const poManager = new POManager(page);
         const loginPage = poManager.getLoginPage();
@@ -31,6 +31,22 @@ test.only('Add items to cart', async ({page}) =>
         expect(await dashboardPage.getCartCount()).toBe(2);
         await dashboardPage.addToCart("IPHONE 13 PRO");
         expect(await dashboardPage.getCartCount()).toBe(3);
+    
+    });
+
+    test.only('@UnitTest Navigation Links', async ({page}) =>
+    {
+        const poManager = new POManager(page);
+        const loginPage = poManager.getLoginPage();
+        await loginPage.goto();
+        await loginPage.login("anshika@gmail.com", "Iamking@000");
+        const dashboardPage = poManager.getDashboardPage();
+        
+        await poManager.getDashboardPage().navBar.navigateToOrders();
+        await poManager.getDashboardPage().navBar.navigateToHome();
+        await poManager.getDashboardPage().navBar.navigateToCart();
+        await poManager.getDashboardPage().navBar.signOut();
+
     
     });
 function sleep(ms) {

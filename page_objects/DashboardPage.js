@@ -1,15 +1,17 @@
 import { expect } from '@playwright/test';
+const NavBar = require('./NavBar');
+
 const url = "https://rahulshettyacademy.com/client";
 //Actual but auto jumps to this page if login anyways - https://rahulshettyacademy.com/client/dashboard/dash
 class DashboardPage {
     constructor(page) {
         this.page = page;
+        this.navBar = new NavBar(page);
         this.productNames = page.locator(".card-body b");
         this.products = page.locator(".card-body");
         this.cart = page.locator("[routerlink='/dashboard/cart'] label"); //displays number of items in cart
         this.cartBtn = page.locator("[routerlink='/dashboard/cart']"); //button to go to cart
         this.loadingWidget = page.locator("ngx-spinner div").first();
-      
     }
     
     async getProductTitles() {
