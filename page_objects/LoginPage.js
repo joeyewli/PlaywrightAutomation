@@ -22,6 +22,12 @@ class LoginPage {
         await this.page.goto(url);
     }
 
+    async isLoginPage() {
+        await this.emailInput.waitFor();
+        await this.passwordInput.waitFor();
+        await this.loginButton.waitFor();
+    }
+
     async login(email, password) {
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);

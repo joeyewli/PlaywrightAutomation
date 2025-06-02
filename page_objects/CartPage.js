@@ -1,20 +1,48 @@
 import { expect } from '@playwright/test';
-const cartPageUrl = "https://rahulshettyacademy.com/client/dashboard/cart";
+import { Console } from 'console';
 const NavBar = require('./NavBar');
-
+const url = "https://rahulshettyacademy.com/client/dashboard/cart"; //cannot enter page directly, must go through dashboard
 class CartPage {
     constructor(page) {
         this.page = page;
         this.navBar = new NavBar(page);
         this.cartItems = page.locator('.cart li');
-        this.checkoutButton = page.getbyRole('button', { name: 'Checkout' });
-        this.continueShoppingButton = page.getbyRole('button', { name: 'Continue Shopping' }); //redirects to dashboard page
-        //subtotal, total
+        this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
+        this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' }); //redirects to dashboard page
+        this.cartTitle = page.locator('h1').getByText('My Cart');
+        // this.noProductsMessage = page.locator('h1').getByText("No Products in Your Cart !") 
+        this.noProductsMessage = page.getByText('No Products', { exact: false });
+    }
 
+    async goto() {
+        await this.page.goto(url);
+        await this.page.waitForLoadState('networkidle'); // Ensure the page is fully loaded
+    }
+
+    async isCartPage() {
+        await this.cartTitle.waitFor();
+        console.log("this is cart page");
+    }
+
+    async getCartItemsCount() {
+        console.log("WHERES MY PAUSE");
+        // await this.noProductsMessage.waitFor({ state: 'visible', timeout: 5000 });
+        // console.log("Checking cart items count...:" + await this.noProductsMessage.isVisible());
+        this.page.pause();
+        if (await this.cartItems.count() === 0) {
+            console.log("Cart is empty");
+            return 0; // Return 0 if the cart is empty
+        }
+            
+        else {
+            // await this.cartItems.first().waitFor();
+            console.log("Cart is not empty");
+            return await this.cartItems.count();
+            
+        }
     }
 
 
-    //to Test
     async RemoveItemFromCart(itemName) {
         const items = await this.cartItems.all();
         for (const item of items) {
@@ -38,13 +66,15 @@ class CartPage {
         await removeButton.click();
     }
 
-    //to Test
     async EmptyCart() {
         const items = await this.cartItems.all();
+        console.log(`Emptying cart with ${items.length} items...`);
         for (const item of items) {
             const removeButton = item.locator('.btn.btn-danger');
             await removeButton.click();
+            await this.page.waitForLoadState('networkidle'); // Wait for the cart to update
         }
+        
     }
 
     async clickCheckout() {
