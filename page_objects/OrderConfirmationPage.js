@@ -3,8 +3,6 @@ const NavBar = require('./NavBar');
 // await expect (page.locator(".hero-primary")).toHaveText(" Thankyou for the order. ");
 //     const orderId = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
 //     console.log(orderId);
-
-
 const title = " Thankyou for the order.";
 class OrderConfirmationPage{
      constructor(page) {    
@@ -19,7 +17,7 @@ class OrderConfirmationPage{
 
         async isOrderConfirmationPage() {
                 await this.orderCompleteMessage.waitFor();
-                console.log("This is the Order Complete Page");
+                // console.log("This is the Order Complete Page");
         }
         
         async getOrderId() {

@@ -1,7 +1,5 @@
-import { expect } from '@playwright/test';
-import { Console } from 'console';
 const NavBar = require('./NavBar');
-const url = "https://rahulshettyacademy.com/client/dashboard/cart"; //cannot enter page directly, must go through dashboard
+// const url = "https://rahulshettyacademy.com/client/dashboard/cart"; //cannot enter page directly, must go through dashboard
 class CartPage {
     constructor(page) {
         this.page = page;
@@ -14,44 +12,36 @@ class CartPage {
         this.noProductsMessage = page.getByText('No Products', { exact: false });
     }
 
-    async goto() {
-        await this.page.goto(url);
-        await this.page.waitForLoadState('networkidle'); // Ensure the page is fully loaded
-    }
+    // async goto() {
+    //     await this.page.goto(url);
+    //     await this.page.waitForLoadState('networkidle'); // Ensure the page is fully loaded
+    // }
 
     async isCartPage() {
         await this.cartTitle.waitFor();
-        console.log("this is cart page");
+        // console.log("this is cart page");
     }
 
     async itemIsInCart(itemName) {
-        const items = await this.cartItems.all();   
+        const items = await this.cartItems.all();
         for (const item of items) {
             const itemText = await item.textContent();
             if (itemText.includes(itemName)) {
-                // console.log(`Item "${itemName}" is in the cart.`);
                 return true; // Return true if the item is found in the cart
             }
         }
-        // console.log(`Item "${itemName}" is not in the cart.`);
         return false; // Return false if the item is not found in the cart
     }
 
     async getCartItemsCount() {
-        console.log("WHERES MY PAUSE");
-        // await this.noProductsMessage.waitFor({ state: 'visible', timeout: 5000 });
-        // console.log("Checking cart items count...:" + await this.noProductsMessage.isVisible());
-        // await this.page.pause();
+        // console.log("WHERES MY PAUSE");
         if (await this.cartItems.count() === 0) {
-            console.log("Cart is empty");
+            // console.log("Cart is empty");
             return 0; // Return 0 if the cart is empty
         }
-            
         else {
-            // await this.cartItems.first().waitFor();
-            console.log("Cart is not empty");
+            // console.log("Cart is not empty");
             return await this.cartItems.count();
-            
         }
     }
 
@@ -81,19 +71,19 @@ class CartPage {
 
     async EmptyCart() {
         const items = await this.cartItems.all();
-        console.log(`Emptying cart with ${items.length} items...`);
+        // console.log(`Emptying cart with ${items.length} items...`);
         for (const item of items) {
             const removeButton = item.locator('.btn.btn-danger');
             await removeButton.click();
             await this.page.waitForLoadState('networkidle'); // Wait for the cart to update
         }
-        
     }
 
     async clickCheckout() {
         await this.checkoutButton.click();
     }
 
+    //to Test
     async clickContinueShopping() {
         await this.continueShoppingButton.click();
     }

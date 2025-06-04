@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test';
 const NavBar = require('./NavBar');
 
 const url = "https://rahulshettyacademy.com/client";
@@ -29,16 +28,14 @@ class DashboardPage {
 
     async addToCart(productName) {
         await this.productNames.first().waitFor(); // Ensure product names are loaded
-        const titles = await this.productNames.allTextContents();
+        // const titles = await this.productNames.allTextContents();
+        // const count = await titles.count();
         const count = await this.products.count();
-        console.log(`Added ${count} to cart--------------------------------`);
          for (let i = 0; i < count; i++) {
             if(await this.products.nth(i).locator('b').textContent() === productName) {
-                // await this.products.nth(i).locator("text= Add To Cart").click();
                 await this.products.nth(i).getByRole('button', { name: 'Add To Cart' }).click();
                 await this.loadingWidget.waitFor({ state: 'hidden' });
-                console.log(`Added ${productName} to cart`);
-                break;            
+                break;    
             }
          }
 

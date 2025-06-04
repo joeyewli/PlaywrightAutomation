@@ -1,22 +1,9 @@
-const { test, expect, beforeAll } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 const POManager = require('../page_objects/POManager');
 
 
-// test('Login test', async ({page}) =>
-//     {
-//         const poManager = new POManager(page);
-//         const loginPage = poManager.getLoginPage();
-//         await loginPage.goto();
-//         await loginPage.login("anshika@gmail.com", "Iamking@000");
-//         const dashboardPage = poManager.getDashboardPage();
-//        // await page.locator(".card-body b").first().waitFor();
-//         await dashboardPage.addToCart("ZARA COAT 3");
-//         page.pause();
-//     });
-
-
-
 test.use({ storageState: './logged-in-state.json' });//reuse the logged-in session
+
 test('Add items to cart', async ({ page }) => {
     //Go to url and wait to load
     const poManager = new POManager(page);
@@ -29,12 +16,13 @@ test('Add items to cart', async ({ page }) => {
     await cartPage.isCartPage(); // Ensure we are on the cart page
     await sleep(1000); // Wait for the cart page to load
     const count2 = await cartPage.navBar.getCartCount();
-    console.log("TESSST: " +count2);
     if (await count2 > 0) {
-        console.log("Cart is not empty, emptying it now...");
+        // console.log("Cart is not empty, emptying it now...");
         await cartPage.EmptyCart(); // Empty the cart if there are items
     }
+
     // go to dashboard page to add items to cart
+    // items can be replaced with variable then split out into a data file
     await sleep(200);
     await dashboardPage.goto(); // Navigate to the dashboard page
     await dashboardPage.addToCart("ZARA COAT 3");
@@ -46,67 +34,42 @@ test('Add items to cart', async ({ page }) => {
 
 });
 
-// test('Check I am on Orders Page', async ({ page }) => {
-//     const poManager = new POManager(page);
-//     const orderPage = poManager.getOrdersPage();
-//     await orderPage.goto(); // Navigate to the dashboard page
-//     await orderPage.isOrdersPage();
-// });
-
-// test('Check I am on Dash Page', async ({ page }) => {
-//     const poManager = new POManager(page);
-//     const dashboardPage = poManager.getDashboardPage();
-//     await dashboardPage.goto(); // Navigate to the dashboard page
-//     await dashboardPage.isDashboardPage();
-// });
-
-// test('Check I am on Carts Page', async ({ page }) => {
-//     const poManager = new POManager(page);
-//     const dashboardPage = poManager.getDashboardPage();
-//     const cartPage = poManager.getCartPage();
-//     await dashboardPage.goto(); // Navigate to the dashboard page
-//     await dashboardPage.goToCart(); // Navigate to the cart page
-//     await cartPage.isCartPage();
-// });
-
-
-
-
-
+//test to check all links in nav bar works
 test('@UnitTest Navigation Links', async ({ page }) => {
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
-    await dashboardPage.goto(); // Navigate to the dashboard page
+    await dashboardPage.goto(); // Navigate directly to the dashboard page
 
-    await dashboardPage.navBar.navigateToOrders();
+    await dashboardPage.navBar.navigateToOrders(); // Navigate to the orders page
     const ordersPage = poManager.getOrdersPage();
     await ordersPage.isOrdersPage();
     expect(page.url()).toContain('/dashboard/myorders');
 
-    await dashboardPage.navBar.navigateToHome();
+    await dashboardPage.navBar.navigateToHome(); // Navigate to the home page
     await dashboardPage.isDashboardPage();
     expect(page.url()).toContain('/dashboard/dash');
 
     const cartPage = poManager.getCartPage();
-    await dashboardPage.navBar.navigateToCart();
+    await dashboardPage.navBar.navigateToCart();    // Navigate to the cart page
     await cartPage.isCartPage();
     expect(page.url()).toContain('/dashboard/cart');
 
 
-    await cartPage.navBar.signOut();
+    await cartPage.navBar.signOut();    // Sign out from the application
     const loginPage = poManager.getLoginPage();
     // workaround, automation won't redirect to login page after sign out. If logged in, user will be redirected to dashboard page
-    await loginPage.goto(); 
-    await loginPage.isLoginPage();
+    await loginPage.goto();
+    await loginPage.isLoginPage(); 
     await expect(page.url()).toContain('client/auth/login'); 
 });
 
-
+// helps test remove items from cart and tidied up after the first test that populates the cart
 test(('remove all items from cart'), async ({ page }) => {
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
     await dashboardPage.goto(); // Navigate to the dashboard page
 
+    // go to cart page and check number of items in the cart
     await dashboardPage.navBar.navigateToCart();
     const cartPage = poManager.getCartPage();
     await sleep(900);
@@ -133,6 +96,7 @@ test('Remove item from cart by name', async ({ page }) => {
     await cartPage.RemoveItemFromCart("ZARA COAT 3");
     expect(await cartPage.cartItems.count()).toBe(0); // Check if the cart is empty
 });
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

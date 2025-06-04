@@ -15,12 +15,13 @@ class POManager {
         this.checkoutPage = new CheckoutPage(page);
         this.OrderConfirmationPage = new OrderConfirmationPage(page);
         this.orderDetailsPage = new OrderDetailsPage(page);
-        
-        
     }
 
     getLoginPage() {
         return this.loginPage;
+    }
+    getDashboardPage() {
+        return this.dashboardPage;
     }
     getCartPage() {
         return this.cartPage;
@@ -29,18 +30,12 @@ class POManager {
         return this.ordersPage;
     }
 
-    getDashboardPage() {
-        return this.dashboardPage;
-    }
-
     getCheckoutPage() {
         return this.checkoutPage;
-    }   
-    
+    }
     getOrderConfirmationPage() {
         return this.OrderConfirmationPage;
     }
-
     getOrderDetailsPage() {
         return this.orderDetailsPage;
     }

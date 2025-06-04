@@ -11,16 +11,17 @@ class OrdersPage {
     this.ordersTitle = page.getByText('Your Orders');
   }
 
-  async getOrderCount() {
-    return await this.orderRows.count();
-  }
-
   async goto() {
     await this.page.goto(url);
     await this.page.waitForLoadState('networkidle'); // Ensure the page is fully loaded
   }
+
   async isOrdersPage() {
     await this.ordersTitle.waitFor();
+  }
+
+  async getOrderCount() {
+    return await this.orderRows.count();
   }
   //To test
   async getOrderDetails(rowIndex) {
@@ -29,37 +30,20 @@ class OrdersPage {
     const orderName = await row.locator('td')[1].textContent();
     const orderPrice = await row.locator('td')[2].textContent();
     const orderDate = await row.locator('td')[3].textContent();
-    
     return { orderId, orderName, orderPrice, orderDate }; // can make this as object
   }
 
-  // To test
   async viewOrderDetailsByOrderID(orderId) {
     const rows = await this.orderRows.all();
     for (const row of rows) {
       const id = await row.locator('th').textContent();
       if (orderId.includes(id.trim())) {
-        console.log(`Order ID: ${id}`);
+        // console.log(`Order ID: ${id}`);
         await row.getByRole('button', { name: 'View' }).click();
         return;
       }
     }
     throw new Error(`Order with ID ${orderId} not found`);
   }
-
-  
-    //   for (let i = 0; i < orderCount; ++i){
-    //     const thisOrderID = await order.nth(i).locator("[scope='row']").textContent();
-    //     await console.log("Step: "+ i);
-    //     await console.log("thisorderID: "+ thisOrderID);
-    //     if ( await orderId.includes(thisOrderID.trim())){
-    //         await console.log("Stepb: "+ i);
-    //         await order.nth(i).locator(".btn").first().click();
-    //         break;
-    //     }
-
-    // }
-
-
 }
 module.exports = OrdersPage;

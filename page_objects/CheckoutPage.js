@@ -1,5 +1,4 @@
 
-
 class CheckoutPage {
     constructor(page) {
         this.page = page;
@@ -15,8 +14,7 @@ class CheckoutPage {
         this.countryInput = page.locator("[placeholder*='Country']"); //Input field that display the country in dropdown
         this.countryDropdown = page.locator(".ta-results");
         // this.placeOrderButton = page.getByRole('button', { name: 'Place Order' }); // This isn't working
-        this.placeOrderButton = page.getByText('Place Order'); 
-
+        this.placeOrderButton = page.getByText('Place Order');
     }
 
     async isCheckoutPage() {
@@ -28,8 +26,8 @@ class CheckoutPage {
 
     async getCountryValue() {
         return await this.countryInput.inputValue(); // Get the current value of the country input
-
     }
+
     async selectShippingCountry(inserttext, country) {
         // await this.emailInput.fill(email);
         await this.countryInput.pressSequentially(inserttext);// partial text
@@ -41,7 +39,6 @@ class CheckoutPage {
                 break;
             }
         }
-
     }
     async fillPaymentInformation(cardNumber, expiryMonth, expiryDay, cvv, nameOnCard) {
         await this.cardNumberInput.fill(cardNumber);
@@ -59,19 +56,14 @@ class CheckoutPage {
     }
 
     async checkShippingEmail(email) {
-        if (email === await this.emailInput.textContent()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        if (email === await this.emailInput.textContent()) { return true; }
+        else { return false; }
     }
-
-
     async placeOrder() {
         await this.placeOrderButton.click();
     }
 
+    //to test and need to find valid coupon codes
     async applyCoupon(couponCode) {
         await this.applyCouponInput.fill(couponCode);
         await this.applyCouponBtn.click();

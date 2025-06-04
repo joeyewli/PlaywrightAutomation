@@ -1,14 +1,5 @@
-import { expect } from '@playwright/test';
-
 const url = "https://rahulshettyacademy.com/client";
-
-//forget password?
-// Don't have an account? Register here or Register button
-// dummy email
-// social media links (doesn't work)
-
-
-
+//redirects to https://rahulshettyacademy.com/client/auth/login if not logged in
 
 class LoginPage {
     constructor(page) {
