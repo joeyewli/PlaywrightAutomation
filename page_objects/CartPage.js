@@ -24,11 +24,24 @@ class CartPage {
         console.log("this is cart page");
     }
 
+    async itemIsInCart(itemName) {
+        const items = await this.cartItems.all();   
+        for (const item of items) {
+            const itemText = await item.textContent();
+            if (itemText.includes(itemName)) {
+                // console.log(`Item "${itemName}" is in the cart.`);
+                return true; // Return true if the item is found in the cart
+            }
+        }
+        // console.log(`Item "${itemName}" is not in the cart.`);
+        return false; // Return false if the item is not found in the cart
+    }
+
     async getCartItemsCount() {
         console.log("WHERES MY PAUSE");
         // await this.noProductsMessage.waitFor({ state: 'visible', timeout: 5000 });
         // console.log("Checking cart items count...:" + await this.noProductsMessage.isVisible());
-        this.page.pause();
+        // await this.page.pause();
         if (await this.cartItems.count() === 0) {
             console.log("Cart is empty");
             return 0; // Return 0 if the cart is empty

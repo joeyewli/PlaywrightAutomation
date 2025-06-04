@@ -5,9 +5,10 @@ const url = "https://rahulshettyacademy.com/client/dashboard/myorders";
 class OrdersPage {
   constructor(page) {
     this.page = page;
+    this.navBar = new NavBar(page)
     this.ordersTable = page.locator('table');
     this.orderRows = this.ordersTable.locator('tbody tr');
-    this.ordersTitle = page.locator('h1').getByText('Your Orders');
+    this.ordersTitle = page.getByText('Your Orders');
   }
 
   async getOrderCount() {
@@ -37,13 +38,27 @@ class OrdersPage {
     const rows = await this.orderRows.all();
     for (const row of rows) {
       const id = await row.locator('th').textContent();
-      if (id === orderId) {
-        this.page.row.getRole('button', { name: 'View' }).click();
-        break
+      if (orderId.includes(id.trim())) {
+        console.log(`Order ID: ${id}`);
+        await row.getByRole('button', { name: 'View' }).click();
+        return;
       }
     }
     throw new Error(`Order with ID ${orderId} not found`);
   }
+
+  
+    //   for (let i = 0; i < orderCount; ++i){
+    //     const thisOrderID = await order.nth(i).locator("[scope='row']").textContent();
+    //     await console.log("Step: "+ i);
+    //     await console.log("thisorderID: "+ thisOrderID);
+    //     if ( await orderId.includes(thisOrderID.trim())){
+    //         await console.log("Stepb: "+ i);
+    //         await order.nth(i).locator(".btn").first().click();
+    //         break;
+    //     }
+
+    // }
 
 
 }

@@ -12,7 +12,8 @@ test.describe('Login Setup', () => {
         const poManager = new POManager(page);
         const loginPage = poManager.getLoginPage()
         await loginPage.goto();
-        await loginPage.login("anshika@gmail.com", "Iamking@000");
+        // await loginPage.login("anshika@gmail.com", "Iamking@000");
+        await loginPage.login("Joelimemberships@gmail.com", "Password123"); 
         await context.storageState({ path: './logged-in-state.json' }); // Save the state to a file
         // await browser.close();
     });
