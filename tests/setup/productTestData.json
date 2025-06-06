@@ -1,0 +1,23 @@
+
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "ZARA COAT 3",
+            "description": "This is a description for test item 1.",
+            "value": 31500
+        },
+        {
+            "id": 2,
+            "name": "ADIDAS ORIGINAL",
+            "description": "This is a description for test item 2.",
+            "value": 31500
+        },
+        {
+            "id": 3,
+            "name": "IPHONE 13 PRO",
+            "description": "This is a description for test item 3.",
+            "value": 231500
+        }
+    ]
+}

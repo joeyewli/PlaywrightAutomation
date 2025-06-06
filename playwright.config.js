@@ -21,10 +21,14 @@ const config = ({
 
   },
 
-  reporter: 'html',
-
+    reporter: [
+    ['html'],
+    ['line'],                // Console output
+    ['allure-playwright']    // Allure reporter
+  ],
+ 
+  grep: /@smoke/, // Run only tests with the @smoke tag
   use: {
-
     browserName: 'chromium',
     headless: true,
     screenshot: 'on',
@@ -39,9 +43,6 @@ module.exports = config
 
 
 export default defineConfig({
-  reporter: [
-    ['line'],                // Console output
-    ['allure-playwright']    // Allure reporter
-  ],
+
 });
 

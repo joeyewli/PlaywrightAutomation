@@ -1,0 +1,14 @@
+
+{
+    "testusers": [
+        {
+            "email": "Joelimemberships@gmail.com",
+            "password": "Password123",
+            "cardNumber": "1234223345678888",
+            "cardExpiry": "6/21",
+            "cardCVC": "123",
+            "nameOnCard": "Casper Smith",
+            "country": "United States"
+        }
+        ]
+}
