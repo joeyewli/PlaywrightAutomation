@@ -1,0 +1,2 @@
+Check cart items: 2
+cart is emopty now
