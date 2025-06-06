@@ -1,10 +1,30 @@
-const { test, expect } = require('@playwright/test');
-const POManager = require('../page_objects/POManager');
+const { test, expect, request } = require('@playwright/test');
+const { APiUtils } = require('./utils/APiUtils.js');
+const userDataset = JSON.parse(JSON.stringify(require("./setup/userTestData.json")))
+const loginPayload = { userEmail: userDataset.testusers[0].email, userPassword: userDataset.testusers[0].password };
+const orderPayload = {
+    orders: [{ country: userDataset.testusers[0].country, productOrderedId: "67a8dde5c0d3e6622a297cc8" },
+    { country: userDataset.testusers[0].country, productOrderedId: "67a8df1ac0d3e6622a297ccb" }]
+}
+const POManager = require('../page_objects/POManager.js')
+// This test suite is tests that only needs user to be logged in
+let token;
+test.beforeAll(async () => {
+    const apiContext = await request.newContext();
+    const apiUtils = new APiUtils(apiContext, loginPayload);
+    const response = await apiUtils.createOrder(orderPayload);
+    token = response.token;
+
+});
+
+test.beforeEach(async ({ page }) => {
+    await page.addInitScript(value => {
+        window.localStorage.setItem('token', value);
+    }, token);
+});
 
 
-test.use({ storageState: './logged-in-state.json' });//reuse the logged-in session
-
-test('[@smoke] Add items to cart', async ({ page }) => {
+test("[@api] Add items to cart", async ({ page }) => {
     //Go to url and wait to load
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
@@ -18,16 +38,16 @@ test('[@smoke] Add items to cart', async ({ page }) => {
     let count = 0;
     for (const product of dataset.products) {
         await dashboardPage.addToCart(product.name); // Add each item to the cart
-        await count++;
+        count++;
         await sleep(500); // Wait for the item to be added to the cart
         console.log(`Added ${product.name} to cart. Current count: ${count}`);
         expect(await dashboardPage.navBar.getCartCount()).toBe(count);
     }
-
 });
 
 //test to check all links in nav bar works
-test('[@smoke] @UnitTest Navigation Links', async ({ page }) => {
+test('[@api] @UnitTest Navigation Links', async ({ page }) => {
+
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
     await dashboardPage.goto(); // Navigate directly to the dashboard page
@@ -56,7 +76,8 @@ test('[@smoke] @UnitTest Navigation Links', async ({ page }) => {
 });
 
 // helps test remove items from cart and tidied up after the first test that populates the cart
-test(('[@smoke] remove all items from cart'), async ({ page }) => {
+test(('[@api] remove all items from cart'), async ({ page }) => {
+
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
     await dashboardPage.goto(); // Navigate to the dashboard page
@@ -74,7 +95,8 @@ test(('[@smoke] remove all items from cart'), async ({ page }) => {
     console.log("cart is emopty now");
 });
 
-test('[@smoke] Remove item from cart by name', async ({ page }) => {
+test('[@smoke] And and Remove item from cart by name', async ({ page }) => {
+
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
     await dashboardPage.goto(); // Navigate to the dashboard page
@@ -93,7 +115,7 @@ test('[@smoke] Remove item from cart by name', async ({ page }) => {
 });
 
 
-test('[@smoke] Cart APP', async ({ page }) => {
+test('[@pi] End to end test - purchase orders and check details', async ({ page }) => {
     const poManager = new POManager(page);
     const dashboardPage = poManager.getDashboardPage();
     const cartPage = poManager.getCartPage();
@@ -104,11 +126,11 @@ test('[@smoke] Cart APP', async ({ page }) => {
     // Item can be replaced with variable then split out into a data file
     await dashboardPage.goto();
 
-    await checkCartPageAndEmptyCartThenReturnToDashboard(dashboardPage,cartPage); // Check if cart is empty and return to dashboard
+    await checkCartPageAndEmptyCartThenReturnToDashboard(dashboardPage, cartPage); // Check if cart is empty and return to dashboard
     await dashboardPage.addToCart(item2);
     await dashboardPage.navBar.navigateToCart(); // Navigate to the cart page
     // Go to cart page and ensure item is in the cart then checkout
-    
+
     await cartPage.isCartPage(); // Ensure we are on the cart page
     await sleep(900); // Wait for the cart page to load
     expect(await cartPage.getCartItemsCount()).toBe(1);

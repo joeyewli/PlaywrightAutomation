@@ -7,10 +7,10 @@ class NavBar {
     this.homeLink = navBarLocator.getByRole("button", { name: 'HOME' });
     this.ordersLink = navBarLocator.getByRole('button', { name: 'ORDERS' });
     this.cartLink = navBarLocator.getByRole("button", { name: 'Cart' });
-    this.signoutLink = navBarLocator.getByRole("button", { name: 'Sign Out' });
+    // this.signoutLink = navBarLocator.getByRole("button", { name: 'Sign Out' });
     this.cart = page.locator("[routerlink='/dashboard/cart'] label"); //displays number of items in cart
     this.cartBtn = page.locator("[routerlink='/dashboard/cart']"); //button to go to cart
-    // this.signoutLink = navBarLocator.locator('.btn.btn-custom').last();
+    this.signoutLink = navBarLocator.locator('.btn.btn-custom').last();
   }
 
   async navigateToHome() {
@@ -27,8 +27,11 @@ class NavBar {
     await this.page.waitForLoadState('networkidle');
   }
 
+  //expected to failed as signout link is glitched. Clicking on it does not sign out.
   async signOut() {
-    await this.signoutLink.click();
+    await this.signoutLink.waitFor({ state: 'visible' }); // Ensure the signout link is visible before clicking
+    // await this.signoutLink.click();
+    await this.signoutLink.click({ force: true });
     await this.page.waitForLoadState('networkidle');
   }
 
