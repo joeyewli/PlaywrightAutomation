@@ -26,10 +26,13 @@ test('Add items to cart', async ({ page }) => {
     await sleep(200);
     await dashboardPage.goto(); // Navigate to the dashboard page
     await dashboardPage.addToCart("ZARA COAT 3");
+    await sleep(200);
     expect(await dashboardPage.navBar.getCartCount()).toBe(1);
     await dashboardPage.addToCart("ADIDAS ORIGINAL");
+    await sleep(200);
     expect(await dashboardPage.navBar.getCartCount()).toBe(2);
     await dashboardPage.addToCart("IPHONE 13 PRO");
+    await sleep(200);
     expect(await dashboardPage.navBar.getCartCount()).toBe(3);
 
 });
